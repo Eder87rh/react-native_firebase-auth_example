@@ -5,12 +5,28 @@ import {
   ToolbarAndroid,
   ActivityIndicator
 } from 'react-native';
+import * as firebase from 'firebase';  // Initialize Firebase
 import { Header,Title,Container, Content, List, ListItem, InputGroup, Input, Icon, Text, Picker, Button } from 'native-base';
 
-import styles from '../styles/mainstyle.js';
 import React, {Component} from 'react';
 import Login from './Login';
 export default class Signup extends Component {
+  static navigatorStyle = {
+    statusBarColor: 'black',
+    statusBarTextColorScheme: 'light',
+    navigationBarColor: 'black',
+    navBarBackgroundColor: '#3F51B5',
+    navBarTextColor: 'white',
+    navBarButtonColor: 'white',
+    tabBarButtonColor: 'red',
+    tabBarSelectedButtonColor: 'red',
+    tabBarBackgroundColor: 'white',
+    topBarElevationShadowEnabled: false,
+    navBarHideOnScroll: true,
+    tabBarHidden: true,
+    drawUnderTabBar: true
+};
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -24,34 +40,35 @@ export default class Signup extends Component {
 
   // A method to passs the username and password to firebase and make a new user account
   signup() {
-    this.setState({
-      // When waiting for the firebase server show the loading indicator.
-      loading: true
-    });
+      this.setState({
+        // When waiting for the firebase server show the loading indicator.
+        loading: true
+      });
 
-    // Make a call to firebase to create a new user.
-    this.props.firebaseApp.auth().createUserWithEmailAndPassword(
-      this.state.email,
-      this.state.password).then(() => {
-        // then and catch are methods that we call on the Promise returned from
-        // createUserWithEmailAndPassword
-        alert('Your account was created!');
+      // Make a call to firebase to create a new user.
+      firebase.auth().createUserWithEmailAndPassword(
+        this.state.email,
+        this.state.password).then(() => {
+          // then and catch are methods that we call on the Promise returned from
+          // createUserWithEmailAndPassword
+          alert('Your account was created!');
+          this.setState({
+            // Clear out the fields when the user logs in and hide the progress indicator.
+            email: '',
+            password: '',
+            loading: false
+          });
+          this.props.navigator.push({
+            screen: 'pages.Login',
+            title: 'Login'
+          });
+      }).catch((error) => {
+        // Leave the fields filled when an error occurs and hide the progress indicator.
         this.setState({
-          // Clear out the fields when the user logs in and hide the progress indicator.
-          email: '',
-          password: '',
           loading: false
         });
-        this.props.navigator.push({
-          component: Login
-        });
-    }).catch((error) => {
-      // Leave the fields filled when an error occurs and hide the progress indicator.
-      this.setState({
-        loading: false
+        alert("Account creation failed: " + error.message );
       });
-      alert("Account creation failed: " + error.message );
-    });
   }
 
   render() {
@@ -80,30 +97,25 @@ export default class Signup extends Component {
                     </InputGroup>
                </ListItem>
               </List>
-              <Button style={styles.primaryButton} onPress={this.signup.bind(this)}>
-                Signup
+              <Button block style={{ margin: 15, marginTop: 10 }}  onPress={this.signup.bind(this)}>
+                <Text>Signup</Text>
               </Button>
-              <Button onPress={this.goToLogin.bind(this)} style={styles.primaryButton}>
-                Go to Login
+              <Button block style={{ margin: 15, marginTop: 10 }}  onPress={this.goToLogin.bind(this)} >
+                <Text>Go to Login</Text>
               </Button>
       </Content>
     ;
     // A simple UI with a toolbar, and content below it.
         return (
                   <Container>
-                  <Header>
-                     <Title>Sign Up</Title>
-                  </Header>
-                  {content}
+                    {content}
                   </Container>
                 )
   }
   goToLogin(){
     this.props.navigator.push({
-      component: Login
+        screen: 'pages.Login',
+        title: 'Login'
     });
   }
 }
-
-//AppRegistry.registerComponent('Signup', () => Signup);
-//export default Signup;

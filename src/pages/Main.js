@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import React, {Component} from 'react';
 import { Header,Container,Title, Content, List, ListItem, InputGroup, Input, Icon, Picker, Button } from 'native-base';
-
+import * as firebase from 'firebase';  // Initialize Firebase
 import Login from './Login';
 import styles from '../styles/mainstyle.js';
 
@@ -36,16 +36,14 @@ export default class Account extends Component {
     }
   }
 
-  componentWillMount() {
-    // get the current user from firebase
-    // const userData = this.props.firebaseApp.auth().currentUser;
-    AsyncStorage.getItem('userData').then((user_data_json) => {
-      let userData = JSON.parse(user_data_json);
-      this.setState({
-        user: userData,
-        loading: false
-      });
-    });
+  async componentWillMount() {
+    // Get User Credentials
+            const userData = await firebase.auth().currentUser;
+            
+            this.setState({
+              user: userData,
+              loading: false
+            });
 
   }
 
@@ -62,34 +60,32 @@ export default class Account extends Component {
                     <Image
                       style={styles.image}
                       source={{uri: this.state.user.photoURL}} />
-                    <Button onPress={this.logout.bind(this)} style={styles.primaryButton}>
-                      Logout
+                    <Button block style={{ margin: 15, marginTop: 10 }} onPress={this.logout.bind(this)}>
+                      <Text>Logout</Text>
                     </Button>
                 </Content>
       ;
-      // console.log("loading user",this.state.user,this.state.loading);
+
     return (
         <Container>
-        <Header>
-            <Title>Header</Title>
-        </Header>
           {content}
       </Container>
     );
   }
 
-  logout() {
+  async logout() {
     // logout, once that is complete, return the user to the login screen.
-    AsyncStorage.removeItem('userData').then(() => {
-      this.props.firebaseApp.auth().signOut().then(() => {
-        this.props.navigator.push({
-          component: Login
-        });
-      });  
-    });
+    try {
+            await firebase.auth().signOut();
+
+            this.props.navigator.push({
+                screen: 'pages.Login',
+                title: 'Login'
+            })
+
+        } catch (error) {
+            console.log(error);
+        }
 
   }
 }
-
-//AppRegistry.registerComponent('Account', () => Account);
-//export default Account;

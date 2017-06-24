@@ -11,8 +11,25 @@ import React, {Component} from 'react';
 import Signup from './Signup';
 import Account from './Main'
 import styles from '../styles/mainstyle.js';
+import * as firebase from 'firebase';  // Initialize Firebase
 
 export default class Login extends Component {
+
+static navigatorStyle = {
+    statusBarColor: 'black',
+    statusBarTextColorScheme: 'light',
+    navigationBarColor: 'black',
+    navBarBackgroundColor: '#3F51B5',
+    navBarTextColor: 'white',
+    navBarButtonColor: 'white',
+    tabBarButtonColor: 'red',
+    tabBarSelectedButtonColor: 'red',
+    tabBarBackgroundColor: 'white',
+    topBarElevationShadowEnabled: false,
+    navBarHideOnScroll: true,
+    tabBarHidden: true,
+    drawUnderTabBar: true
+};
 
   constructor(props){
     super(props);
@@ -62,7 +79,7 @@ export default class Login extends Component {
         </Button>
 
         <Button block style={{ margin: 15, marginTop: 10 }} onPress={this.goToSignup.bind(this)} >
-           <Text>¿Nuevo aquí? </Text>
+           <Text>Are you new here? </Text>
         </Button>
   </Content>
   ;
@@ -80,16 +97,17 @@ return (
       loading: true
     });
     // Log in and display an alert to tell the user what happened.
-    this.props.firebaseApp.auth().signInWithEmailAndPassword(this.state.email, this.state.password
-    ).then((userData) =>
+    firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+    .then((userData) =>
       {
         this.setState({
                 loading: false
               });
-              AsyncStorage.setItem('userData', JSON.stringify(userData));
-              this.props.navigator.push({
-                component: Account
-              });
+        //AsyncStorage.setItem('userData', JSON.stringify(userData));
+        this.props.navigator.push({
+            screen: 'pages.Main',
+            title: 'Cuenta'
+        });
       }
     ).catch((error) =>
         {
@@ -103,7 +121,8 @@ return (
   // Go to the signup page
   goToSignup(){
     this.props.navigator.push({
-      component: Signup
+        screen: 'pages.Signup',
+        title: 'Sign Up'
     });
   }
 }

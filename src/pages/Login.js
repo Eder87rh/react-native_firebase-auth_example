@@ -1,21 +1,22 @@
 'use strict';
 import {
   AppRegistry,
-  AsyncStorage,
   View,
   ToolbarAndroid,
-  ActivityIndicator
+  ActivityIndicator,
+  dismissKeyboard
 } from 'react-native';
-import { Header,Container,Title, Content, List, ListItem, InputGroup, Input, Icon, Text, Picker, Button } from 'native-base';
-import React, {Component} from 'react';
+import { Header, Container, Title, Content, List, ListItem, InputGroup, Input, Icon, Text, Picker, Button } from 'native-base';
+import React, { Component } from 'react';
 import Signup from './Signup';
 import Account from './Main'
 import styles from '../styles/mainstyle.js';
 import * as firebase from 'firebase';  // Initialize Firebase
+import DismissKeyboard from "dismissKeyboard";
 
 export default class Login extends Component {
 
-static navigatorStyle = {
+  static navigatorStyle = {
     statusBarColor: 'black',
     statusBarTextColorScheme: 'light',
     navigationBarColor: 'black',
@@ -29,9 +30,9 @@ static navigatorStyle = {
     navBarHideOnScroll: true,
     tabBarHidden: true,
     drawUnderTabBar: true
-};
+  };
 
-  constructor(props){
+  constructor(props) {
     super(props);
     // We have the same props as in our signup.js file and they serve the same purposes.
     this.state = {
@@ -39,90 +40,95 @@ static navigatorStyle = {
       email: '',
       password: ''
     }
+
+    this.goToSignup = this.goToSignup.bind(this);
+    this.login = this.login.bind(this);
   }
 
   render() {
     // The content of the screen should be inputs for a username, password and submit button.
     // If we are loading then we display an ActivityIndicator.
     const content = this.state.loading ?
-    
-    <View style={styles.body}>
-      <ActivityIndicator size="large"/>
-    </View> 
 
-    :
+      <View style={styles.body}>
+        <ActivityIndicator size="large" />
+      </View>
 
-    <Content>
+      :
+
+      <Content>
         <List>
           <ListItem>
-               <InputGroup>
-               <Icon name="ios-person" style={{ color: '#0A69FE' }} />
-               <Input
-                onChangeText={(text) => this.setState({email: text})}
+            <InputGroup>
+              <Icon name="ios-person" style={{ color: '#0A69FE' }} />
+              <Input
+                onChangeText={(text) => this.setState({ email: text })}
                 value={this.state.email}
                 placeholder={"Email Address"} />
-                </InputGroup>
+            </InputGroup>
           </ListItem>
           <ListItem>
-              <InputGroup>
-                <Icon name="ios-unlock" style={{ color: '#0A69FE' }} />
+            <InputGroup>
+              <Icon name="ios-unlock" style={{ color: '#0A69FE' }} />
               <Input
-                onChangeText={(text) => this.setState({password: text})}
+                onChangeText={(text) => this.setState({ password: text })}
                 value={this.state.password}
                 secureTextEntry={true}
                 placeholder={"Password"} />
-              </InputGroup>
+            </InputGroup>
           </ListItem>
         </List>
-        <Button block style={{ margin: 15, marginTop: 10 }} onPress={this.login.bind(this)}>
-           <Text>Login </Text>
+        <Button block style={{ margin: 15, marginTop: 10 }} onPress={this.login}>
+          <Text>Login </Text>
         </Button>
 
-        <Button block style={{ margin: 15, marginTop: 10 }} onPress={this.goToSignup.bind(this)} >
-           <Text>Are you new here? </Text>
+        <Button block style={{ margin: 15, marginTop: 10 }} onPress={this.goToSignup} >
+          <Text>Are you new here? </Text>
         </Button>
-  </Content>
-  ;
+      </Content>
+      ;
 
-// A simple UI with a toolbar, and content below it.
-return (
-        <Container>
-           {content}
-        </Container>
-        );
+    // A simple UI with a toolbar, and content below it.
+    return (
+      <Container>
+        {content}
+      </Container>
+    );
   }
 
-  login(){
+  async login() {
+
+    DismissKeyboard();
+
     this.setState({
       loading: true
     });
-    // Log in and display an alert to tell the user what happened.
-    firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
-    .then((userData) =>
-      {
-        this.setState({
-                loading: false
-              });
-        //AsyncStorage.setItem('userData', JSON.stringify(userData));
-        this.props.navigator.push({
-            screen: 'pages.Main',
-            title: 'Cuenta'
+
+    try {
+      await firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+        .catch((error) => {
+          this.showError(error);
         });
-      }
-    ).catch((error) =>
-        {
-              this.setState({
-                loading: false
-              });
-        alert('Login Failed. Please try again'+error);
-    });
+    }
+    catch (error) {
+      this.showError(error);
+    }
   }
 
+  showError = (error) => {
+    this.setState({
+      loading: false
+    });
+
+    alert('Login Failed. Please try again' + error);
+  }
+
+
   // Go to the signup page
-  goToSignup(){
+  goToSignup() {
     this.props.navigator.push({
-        screen: 'pages.Signup',
-        title: 'Sign Up'
+      screen: 'pages.Signup',
+      title: 'Sign Up'
     });
   }
 }

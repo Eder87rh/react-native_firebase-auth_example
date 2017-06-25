@@ -39,9 +39,8 @@ export default class Signup extends Component {
   }
 
   // A method to passs the username and password to firebase and make a new user account
-  signup() {
+  signup = () => {
       this.setState({
-        // When waiting for the firebase server show the loading indicator.
         loading: true
       });
 
@@ -97,10 +96,10 @@ export default class Signup extends Component {
                     </InputGroup>
                </ListItem>
               </List>
-              <Button block style={{ margin: 15, marginTop: 10 }}  onPress={this.signup.bind(this)}>
+              <Button block style={{ margin: 15, marginTop: 10 }}  onPress={this.signup}>
                 <Text>Signup</Text>
               </Button>
-              <Button block style={{ margin: 15, marginTop: 10 }}  onPress={this.goToLogin.bind(this)} >
+              <Button block style={{ margin: 15, marginTop: 10 }}  onPress={this.goToLogin} >
                 <Text>Go to Login</Text>
               </Button>
       </Content>
@@ -112,7 +111,7 @@ export default class Signup extends Component {
                   </Container>
                 )
   }
-  goToLogin(){
+  goToLogin = () => {
     this.props.navigator.push({
         screen: 'pages.Login',
         title: 'Login'

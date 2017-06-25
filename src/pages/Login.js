@@ -32,6 +32,10 @@ export default class Login extends Component {
     drawUnderTabBar: true
   };
 
+
+
+
+
   constructor(props) {
     super(props);
     // We have the same props as in our signup.js file and they serve the same purposes.
@@ -123,8 +127,6 @@ export default class Login extends Component {
     alert('Login Failed. Please try again' + error);
   }
 
-
-  // Go to the signup page
   goToSignup() {
     this.props.navigator.push({
       screen: 'pages.Signup',

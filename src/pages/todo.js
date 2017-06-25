@@ -32,14 +32,14 @@ export default class todo extends Component {
   }
 
   LoginScreen = () => {
-    this.props.navigator.push({
+    this.props.navigator.resetTo({
       screen: 'pages.Login',
       title: 'Login'
     });
   };
 
   MainScreen = () => {
-    this.props.navigator.push({
+    this.props.navigator.resetTo({
       screen: 'pages.Main',
       title: 'Account'
     });

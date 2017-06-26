@@ -3,13 +3,13 @@ import React, {
   StyleSheet
 } from 'react-native';
 
-module.exports = StyleSheet.create({
+export default {
   container: {
     alignItems: 'stretch',
     flex: 1
   },
   body: {
-    flex: 9,
+    flex: 1,
     flexDirection:'row',
     alignItems:'center',
     justifyContent:'center',
@@ -22,4 +22,4 @@ module.exports = StyleSheet.create({
     backgroundColor:"red",
     width:150
   },
-});
+};

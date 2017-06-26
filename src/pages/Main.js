@@ -14,6 +14,7 @@ import { Header, Container, Title, Content, List, ListItem, InputGroup, Input, I
 import * as firebase from 'firebase';  // Initialize Firebase
 import Login from './Login';
 import styles from '../styles/mainstyle.js';
+import NavStyle from '../styles/navStyle.js';
 
 // Styles specific to the account page
 const accountStyles = StyleSheet.create({
@@ -26,6 +27,8 @@ const accountStyles = StyleSheet.create({
 });
 
 export default class Account extends Component {
+
+  static navigatorStyle = NavStyle.navigatorStyle;
 
   constructor(props) {
     super(props);

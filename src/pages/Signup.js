@@ -7,62 +7,30 @@ import {
 } from 'react-native';
 import * as firebase from 'firebase';  // Initialize Firebase
 import { Header,Title,Container, Content, List, ListItem, InputGroup, Input, Icon, Text, Picker, Button } from 'native-base';
-
+import NavStyle from '../styles/navStyle.js';
 import React, {Component} from 'react';
 import Login from './Login';
 export default class Signup extends Component {
-  static navigatorStyle = {
-    statusBarColor: 'black',
-    statusBarTextColorScheme: 'light',
-    navigationBarColor: 'black',
-    navBarBackgroundColor: '#3F51B5',
-    navBarTextColor: 'white',
-    navBarButtonColor: 'white',
-    tabBarButtonColor: 'red',
-    tabBarSelectedButtonColor: 'red',
-    tabBarBackgroundColor: 'white',
-    topBarElevationShadowEnabled: false,
-    navBarHideOnScroll: true,
-    tabBarHidden: true,
-    drawUnderTabBar: true
-};
+  static navigatorStyle = NavStyle.navigatorStyle;
   
   constructor(props) {
     super(props);
     this.state = {
-      // used to display a progress indicator if waiting for a network response.
       loading: false,
-      // entered credentials
       email: '',
       password: ''
     }
   }
 
-  // A method to passs the username and password to firebase and make a new user account
+  
   signup = () => {
       this.setState({
         loading: true
       });
 
-      // Make a call to firebase to create a new user.
-      firebase.auth().createUserWithEmailAndPassword(
-        this.state.email,
-        this.state.password).then(() => {
-          // then and catch are methods that we call on the Promise returned from
-          // createUserWithEmailAndPassword
-          alert('Your account was created!');
-          this.setState({
-            // Clear out the fields when the user logs in and hide the progress indicator.
-            email: '',
-            password: '',
-            loading: false
-          });
-          this.props.navigator.push({
-            screen: 'pages.Login',
-            title: 'Login'
-          });
-      }).catch((error) => {
-        // Leave the fields filled when an error occurs and hide the progress indicator.
+      
+      firebase.auth().createUserWithEmailAndPassword(this.state.email,this.state.password)
+      .catch((error) => {
         this.setState({
           loading: false
         });
@@ -71,8 +39,6 @@ export default class Signup extends Component {
   }
 
   render() {
-    // The content of the screen should be inputs for a username, password and submit button.
-    // If we are loading then we display an ActivityIndicator.
     const content = this.state.loading ? <ActivityIndicator size="large"/> :
            <Content>
                 <List>

@@ -6,39 +6,22 @@ import {
   ActivityIndicator,
   dismissKeyboard
 } from 'react-native';
-import { Header, Container, Title, Content, List, ListItem, InputGroup, Input, Icon, Text, Picker, Button } from 'native-base';
+import { Spinner,Header, Container, Title, Content, List, ListItem, InputGroup, Input, Icon, Text, Picker, Button } from 'native-base';
 import React, { Component } from 'react';
 import Signup from './Signup';
 import Account from './Main'
 import styles from '../styles/mainstyle.js';
 import * as firebase from 'firebase';  // Initialize Firebase
 import DismissKeyboard from "dismissKeyboard";
+import NavStyle from '../styles/navStyle.js';
 
 export default class Login extends Component {
 
-  static navigatorStyle = {
-    statusBarColor: 'black',
-    statusBarTextColorScheme: 'light',
-    navigationBarColor: 'black',
-    navBarBackgroundColor: '#3F51B5',
-    navBarTextColor: 'white',
-    navBarButtonColor: 'white',
-    tabBarButtonColor: 'red',
-    tabBarSelectedButtonColor: 'red',
-    tabBarBackgroundColor: 'white',
-    topBarElevationShadowEnabled: false,
-    navBarHideOnScroll: true,
-    tabBarHidden: true,
-    drawUnderTabBar: true
-  };
-
-
-
+  static navigatorStyle = NavStyle.navigatorStyle;
 
 
   constructor(props) {
     super(props);
-    // We have the same props as in our signup.js file and they serve the same purposes.
     this.state = {
       loading: false,
       email: '',
@@ -50,17 +33,17 @@ export default class Login extends Component {
   }
 
   render() {
-    // The content of the screen should be inputs for a username, password and submit button.
-    // If we are loading then we display an ActivityIndicator.
     const content = this.state.loading ?
 
-      <View style={styles.body}>
-        <ActivityIndicator size="large" />
-      </View>
+      <Content contentContainerStyle={styles.container}>
+        <View style={styles.body}>
+          <Spinner color='blue' />
+        </View>
+      </Content>
 
       :
 
-      <Content>
+      <Content contentContainerStyle={styles.container}>
         <List>
           <ListItem>
             <InputGroup>
@@ -94,7 +77,7 @@ export default class Login extends Component {
 
     // A simple UI with a toolbar, and content below it.
     return (
-      <Container>
+      <Container >
         {content}
       </Container>
     );

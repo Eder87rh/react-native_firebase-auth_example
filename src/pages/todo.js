@@ -9,6 +9,7 @@ import {
   View,
   ToolbarAndroid
 } from 'react-native';
+import {Container,Content,Spinner} from 'native-base';
 //Pages
 import Signup from './Signup';
 import Login from './Login';
@@ -47,13 +48,13 @@ export default class todo extends Component {
 
   render() {
           return ( 
-              // Our default loading view while waiting to hear back from firebase
-              <View style={styles.container}>
-                <ToolbarAndroid title="Login" />
-                <View style={styles.body}>
-                  <ActivityIndicator size="large" />
-                </View>
-              </View>
+            <Container>
+                <Content contentContainerStyle={styles.container}>
+                    <View style={styles.body}>
+                        <Spinner style={{alignSelf: 'center'}}  color='blue' />
+                    </View>
+                </Content>
+            </Container>
           );
   }
 

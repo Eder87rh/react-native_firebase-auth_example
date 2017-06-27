@@ -10,11 +10,10 @@ import {
   ToolbarAndroid
 } from 'react-native';
 import React, { Component } from 'react';
-import { Header, Container, Title, Content, List, ListItem, InputGroup, Input, Icon, Picker, Button } from 'native-base';
+import { Spinner,Header, Container, Title, Content, List, ListItem, InputGroup, Input, Icon, Picker, Button } 
+         from 'native-base';
 import * as firebase from 'firebase';  // Initialize Firebase
-import Login from './Login';
 import styles from '../styles/mainstyle.js';
-import NavStyle from '../styles/navStyle.js';
 
 // Styles specific to the account page
 const accountStyles = StyleSheet.create({
@@ -28,14 +27,11 @@ const accountStyles = StyleSheet.create({
 
 export default class Account extends Component {
 
-  static navigatorStyle = NavStyle.navigatorStyle;
-
   constructor(props) {
     super(props);
     this.state = {
       user: null,
-      loading: true,
-      buttonBlocked: false
+      loading: true
     }
   }
 
@@ -53,17 +49,23 @@ export default class Account extends Component {
   }
 
   render() {
-    const content = this.state.loading ?
-      <ActivityIndicator size="large" /> :
+    const content = this.state.loading 
+    ? 
+    <Content contentContainerStyle={styles.container}>
+        <View style={styles.body}>
+          <Spinner style={{ alignSelf: 'center' }} color='blue' />
+        </View>
+      </Content>
+    :
       this.state.user &&
-      <Content>
+      <Content contentContainerStyle={styles.container}>
         <View style={accountStyles.email_container}>
           <Text style={accountStyles.email_text}>{this.state.user.email}</Text>
         </View>
         {/*<Image
                       style={styles.image}
                       source={{uri: this.state.user.photoURL}} />*/}
-        <Button block disabled={this.state.buttonBlocked} style={{ margin: 15, marginTop: 10 }} onPress={this.logout}>
+        <Button block style={{ margin: 15, marginTop: 10 }} onPress={this.logout}>
           <Text>Logout</Text>
         </Button>
       </Content>
@@ -78,12 +80,16 @@ export default class Account extends Component {
 
   async logout() {
     try {
-      await firebase.auth().signOut();
+      await firebase.auth().signOut().then(() => {
+        this.props.navigator.push({
+          screen: 'pages.Login',
+          title: 'Login',
+          navigatorStyle:styles.navigatorStyle
+        })
+      }, (error) =>  {
+         alert('Logout Failed. Please try again' + error);
+      });
 
-      this.props.navigator.push({
-        screen: 'pages.Login',
-        title: 'Login'
-      })
 
     } catch (error) {
       console.log(error);

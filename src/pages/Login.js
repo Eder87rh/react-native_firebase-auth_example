@@ -8,17 +8,12 @@ import {
 } from 'react-native';
 import { Spinner,Header, Container, Title, Content, List, ListItem, InputGroup, Input, Icon, Text, Picker, Button } from 'native-base';
 import React, { Component } from 'react';
-import Signup from './Signup';
-import Account from './Main'
 import styles from '../styles/mainstyle.js';
 import * as firebase from 'firebase';  // Initialize Firebase
 import DismissKeyboard from "dismissKeyboard";
-import NavStyle from '../styles/navStyle.js';
+
 
 export default class Login extends Component {
-
-  static navigatorStyle = NavStyle.navigatorStyle;
-
 
   constructor(props) {
     super(props);
@@ -113,7 +108,8 @@ export default class Login extends Component {
   goToSignup() {
     this.props.navigator.push({
       screen: 'pages.Signup',
-      title: 'Sign Up'
+      title: 'Sign Up',
+      navigatorStyle:styles.navigatorStyle
     });
   }
 }

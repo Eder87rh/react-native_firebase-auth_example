@@ -1,88 +1,67 @@
-import React, { Component } from 'react';  
-import { Container, Content, List, ListItem, Text, Icon, Badge, Left, Body, Right, Switch } from 'native-base';  
+import React, { Component } from 'react';
+import { Container, Content, List, ListItem, Text, Icon, Badge, Left, Body, Right, Switch } from 'native-base';
 import { TouchableWithoutFeedback, Animated, Alert } from 'react-native';
-
-const ACTION_TIMER = 400;
-
-class RowComponent extends Component {  
-    // constructor(props){
-    //     super(props);
-    //     this.state = {
-    //         //done: false,
-    //         pressAction:  new Animated.Value(0),
-    //         //item: null
-    //     };
-    // }
-
-    // componentWillMount() {
-    //     this._value = 0;
-    //     //this.state.pressAction.addListener((v) => this._value = v.value);
-    // }
+import styles from '../src/styles/mainstyle.js';
 
 
-    // changeDone = (item) => {
-    //     console.log(item);
-    // }
-    
-    // pressIn = () => {
-    //     Animated.timing(this.state.pressAction,{
-    //         duration: ACTION_TIMER,
-    //         toValue: 1
-    //     }).start(this.animationActionComplete);
-    // }
 
-    borrar = () => {
-        this.props.borrar(this.props.item);
+class RowComponent extends Component {
+
+
+    pressIn = () => {
+        switch (this.props.id) {
+            case 1: { //Mail & password
+               this.goToLoginPassword();
+                break;
+            }
+            case 2: { //Facebook
+                this.goToFacebookAuth();
+                break;
+            }
+            default: {
+                //statements; 
+                break;
+            }
+        }
     }
 
-    pressIn =() => {
-        const message = '¿Seguro que quieres eliminarlo?';
-        // if (this._value === 1) {
-            //this._value = 1
-
-            Alert.alert(
-                'ELIMINAR',
-                message,
-                [
-                    {
-                        text: 'Borrar',
-                        onPress: this.borrar
-                    },
-                    {
-                        text: 'Cancelar',
-                        onPress: null
-                    }
-                ]
-              );
-        // }
+    goToLoginPassword = () => {
+        this.props.navigator.push({
+            screen: 'pages.Login',
+            title: 'Login',
+            navigatorStyle: styles.navigatorStyle
+        });
     }
 
+    goToFacebookAuth = () => {
+        this.props.navigator.push({
+            screen: 'pages.FacebookAuth',
+            title: 'Facebook',
+            navigatorStyle: styles.navigatorStyle
+        });
+    }
+
+    goToPhoneAuth = () => {
+        this.props.navigator.push({
+            screen: 'pages.PhoneAuth',
+            title: 'Phone Login',
+            navigatorStyle: styles.navigatorStyle
+        });
+    }
 
 
     render() {
         return (
-                    // <TouchableWithoutFeedback
-                    //     onPressIn={this.pressIn}
-                    //     onPressOut={this.pressOut} >
-                        <ListItem icon onPress={this.pressIn}>
-                            <Left>
-                                <Icon name="pizza" />
-                            </Left>
-                            <Body>
-                              <Text>{this.props.item.name}</Text>
-                            </Body>
-
-                            <Right>
-                                <Switch onValueChange={() => {
-                                        this.props.item.done = !this.props.item.done;
-                                        this.props.changeDone(this.props.item)
-                                    }} value={this.props.item.done} />
-                            </Right>
-                        </ListItem>
-                     // </TouchableWithoutFeedback>
-
-                );
-            }
+            <ListItem icon onPress={this.pressIn}>
+                <Left>
+                    <Icon ios={this.props.icon_ios} android={this.props.icon_android} style={{ alignSelf: 'center' }} />
+                </Left>
+                <Body>
+                    <Text>{this.props.text}</Text>
+                </Body>
+            </ListItem>
+        );
+    }
 
 }
 

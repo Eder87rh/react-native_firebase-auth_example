@@ -10,10 +10,6 @@ import {
   ToolbarAndroid
 } from 'react-native';
 import {Container,Content,Spinner} from 'native-base';
-//Pages
-import Signup from './Signup';
-import Login from './Login';
-import Account from './Main';
 import styles from '../styles/mainstyle.js';
 import * as firebase from 'firebase';  // Initialize Firebase
 import Firebase from '../firebase/firebase.js';
@@ -28,14 +24,14 @@ export default class todo extends Component {
 
   getInitialView = () => {
       firebase.auth().onAuthStateChanged((user) => {
-           user ? this.MainScreen() : this.LoginScreen();
+           user ? this.MainScreen() : this.AuthMenu();
       });
   }
 
-  LoginScreen = () => {
+  AuthMenu = () => {
     this.props.navigator.resetTo({
-      screen: 'pages.Login',
-      title: 'Login',
+      screen: 'pages.AuthMenu',
+      title: 'ReactNative - FirebaseAuth',
       navigatorStyle:styles.navigatorStyle
     });
   };

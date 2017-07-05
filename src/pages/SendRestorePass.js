@@ -13,21 +13,20 @@ import * as firebase from 'firebase';  // Initialize Firebase
 import DismissKeyboard from "dismissKeyboard";
 
 
-export default class Login extends Component {
+export default class SendRestorePass extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
-      email: '',
-      password: ''
+      email: ''
     }
 
-    this.goToSignup = this.goToSignup.bind(this);
-    this.login = this.login.bind(this);
+    this.sendEmail = this.sendEmail.bind(this);
+
   }
 
-  render() {
+render() {
     const content = this.state.loading ?
 
       <Content contentContainerStyle={styles.container}>
@@ -49,27 +48,11 @@ export default class Login extends Component {
                 placeholder={"Email Address"} />
             </InputGroup>
           </ListItem>
-          <ListItem>
-            <InputGroup>
-              <Icon name="ios-unlock" style={{ color: '#0A69FE' }} />
-              <Input
-                onChangeText={(text) => this.setState({ password: text })}
-                value={this.state.password}
-                secureTextEntry={true}
-                placeholder={"Password"} />
-            </InputGroup>
-          </ListItem>
         </List>
-        <Button block style={{ margin: 15, marginTop: 10 }} onPress={this.login}>
-          <Text>Login </Text>
+        <Button block style={{ margin: 15, marginTop: 10 }} onPress={this.sendEmail}>
+          <Text>Send me restauration email </Text>
         </Button>
 
-        <Button block style={{ margin: 15, marginTop: 10 }} onPress={this.goToSignup} >
-          <Text>Sign up</Text>
-        </Button>
-         <Button transparent style={{ alignSelf:"center"}} onPress={this.goToRestorePass}>
-            <Text>Did you forget your password?</Text>
-          </Button>
       </Content>
       ;
 
@@ -79,48 +62,43 @@ export default class Login extends Component {
         {content}
       </Container>
     );
-  }
+}
 
-  async login() {
-
+async sendEmail() {
     DismissKeyboard();
 
     this.setState({
-      loading: true
+        loading: true
     });
 
     try {
-      await firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
-        .catch((error) => {
-          this.showError(error);
+
+        let auth = firebase.auth();
+
+        await firebase.auth().sendPasswordResetEmail(this.state.email).then(() => {
+            this.goToLogin();
+        }, (error) => {
+            this.showError(error);
         });
     }
     catch (error) {
-      this.showError(error);
+        this.showError(error);
     }
-  }
+}
 
-  showError = (error) => {
+showError = (error) => {
     this.setState({
       loading: false
     });
 
     alert('Login Failed. Please try again' + error);
-  }
+}
 
-  goToSignup() {
-    this.props.navigator.push({
-      screen: 'pages.Signup',
-      title: 'Sign Up',
-      navigatorStyle:styles.navigatorStyle
-    });
-  }
-
-  goToRestorePass = () => {
-    this.props.navigator.push({
-      screen : 'pages.SendRestorePass',
-      title: 'Restore password request',
-      navigatorStyle:styles.navigatorStyle
+ goToLogin = () => {
+    this.props.navigator.resetTo({
+      screen: 'pages.Login',
+      title: 'Login',
+      navigatorStyle: styles.navigatorStyle
     });
   }
 
